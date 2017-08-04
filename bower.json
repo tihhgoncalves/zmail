@@ -1,0 +1,22 @@
+{
+  "name": "HTML EM BRANCO",
+  "homepage": "https://github.com/tihhgoncalves/html-em-branco",
+  "authors": [
+    "Tihh Gonçalves <tihh.gon@gmail.com>"
+  ],
+  "description": "É um projeto de HTML do zero",
+  "main": "index.html",
+  "keywords": [
+    "html",
+    "developer"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "rhinoJS": "*",
+    "bootstrap": "^3.3.6",
+    "bootstrap-device-debug": "*",
+    "font-awesome": "^4.7.0",
+    "animate.css": "^3.5.2"
+  }
+}

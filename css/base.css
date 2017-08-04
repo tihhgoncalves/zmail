@@ -1,0 +1,19 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,300italic,300);
+/** Página **/
+/** Textos **/
+/* Cores */
+/** Animates **/
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #F9F9F9;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Open Sans', sans-serif;
+}
+.container .row {
+  margin: 25px 0;
+}
