@@ -50,24 +50,22 @@
     </div>
 
     <div class="row">
+
       <div class="col-md-6">
         <p>URl de partida</p>
         <input class="form-control" type="text" required="" id="url" placeholder="">
       </div>
+
+      <div class="col-md-6">
+        <p>Status:</p>
+        <span class="status label label-success">Pronto</span>
+
+      </div>
+
     </div>
+
 
     <hr>
-
-    <div class="row">
-      <div class="col-md-6">
-        <p>Pesquisar em:</p>
-        <select class="form-control">
-          <option>facebook.com</option>
-          <option>linkedin.com</option>
-          <option>google.com</option>
-        </select>
-      </div>
-    </div>
 
     <div class="row">
       <div class="col-md-6">
@@ -92,7 +90,7 @@
 
       <div class="col-md-6">
         <p>E-mails:</p>
-        <textarea class="form-control" id="urlsHistorico" style="height: 300px;;white-space:pre;"></textarea>
+        <textarea class="form-control" id="emails" style="height: 300px;;white-space:pre;"></textarea>
       </div>
     </div>
 
