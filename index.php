@@ -34,6 +34,7 @@
 <!-- Carrega CSS -->
 <link rel="stylesheet" href="css/reset.css">
 <link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/checkbox.css">
 
 <!-- Carrega JS -->
 <script src="js/base.js"></script>
@@ -52,13 +53,30 @@
     <div class="row">
 
       <div class="col-md-6">
-        <p>URl de partida</p>
+        <p>URl</p>
         <input class="form-control" type="text" required="" id="url" placeholder="">
+
+
       </div>
 
       <div class="col-md-6">
-        <p>Status:</p>
-        <span class="status label label-success">Pronto</span>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="" id="check_todasUrl" checked>
+            <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+            Todas as urls da lista automaticamente.
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="" id="check_ignorarErros">
+            <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+            Ignorar erros
+          </label>
+        </div>
+
+
 
       </div>
 
@@ -70,6 +88,8 @@
     <div class="row">
       <div class="col-md-6">
         <button id="consultar" class="btn btn-primary">Consultar</button>
+
+        <span style="margin-left: 25px;" class="status label label-success">Pronto</span>
       </div>
     </div>
 
@@ -84,15 +104,15 @@
     <div class="row">
 
       <div class="col-md-6">
-        <p>Urls:</p>
+        <p>Urls Pendentes <span id="urls_total">(0)</span></p>
         <textarea class="form-control" id="urls" style="height: 200px;white-space:pre;" wrap="soft" ></textarea>
 
-        <p>Histórico já consultadas:</p>
+        <p>Histórico já consultadas <span id="urlsHistorico_total">(0)</span></p>
         <textarea class="form-control" id="urlsHistorico" style="height: 200px;white-space:pre;" wrap="soft"></textarea>
       </div>
 
       <div class="col-md-6">
-        <p>E-mails:</p>
+        <p>E-mails coletados  <span id="emails_total">(0)</span></p>
         <textarea class="form-control" id="emails" style="height: 420px;;white-space:pre;"></textarea>
       </div>
     </div>

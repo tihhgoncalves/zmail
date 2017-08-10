@@ -3,18 +3,21 @@ $(document).ready(function(){
 
   $('#consultar').click(function(){
 
+
+    if (VerifyCheck('check_todasUrl')) {
+      var msg;
+      msg = 'Vi que você marcou pra analisar as urls automaticamente.';
+      msg += "\r\n";
+      msg += "\r\n";
+      msg += 'Perfeito! =)';
+      msg += "\r\n";
+      msg += "\r\n";
+      msg += 'Mas quando quiser parar, simplesmente desmarque essa opção que o sistema irá parar após de verificar a URL vigente.';
+      alert(msg);
+    }
+
     var url = $('#url').val();
-
-    if(url.substr(0,4) != 'http') {
-      url = 'http://' + url;
-      $('#url').val(url);
-    }
-
-    if(url.length > 0) {
-      consultaURL(url);
-    } else {
-      alert('digite uma URL');
-    }
+    consultaURL(url);
 
   });
 
@@ -23,46 +26,64 @@ $(document).ready(function(){
 
 function consultaURL(urlPesquisada){
 
-  console.log('Consultando URL: '. urlPesquisada)
+  if(urlPesquisada.length > 0) {
 
-  status('Consultando URL', 'info');
+    if (urlPesquisada.substr(0, 4) != 'http') {
+      urlPesquisada = 'http://' + urlPesquisada;
+      $('#url').val(urlPesquisada);
+    }
 
-  $.ajax({
-    method: "POST",
-    url: "ajax.urls.php",
-    datatype: 'JSON',
-    data: { url: urlPesquisada }
-  })
-    .done(function(urls) {
 
-      $.each(urls,function(i, url) {
-        adicionaURL(url, urlPesquisada);
-      });
+    status('Consultando URL', 'info');
 
-      status('Pronto', 'success');
-      var val = $('#url').val();
-      $('#url').val('');
-      var urlsHistorico = $('#urlsHistorico').val();
-
-      if(urlsHistorico.length > 0)
-        urlsHistorico += "\r\n";
-
-      urlsHistorico += val;
-      $('#urlsHistorico').val(urlsHistorico);
-
-      var br = $('#urls').val().indexOf("\n");
-      var newUrl = $('#urls').val().substr(0, br);
-      var newUrls = $('#urls').val().substr(br+1);
-      $('#url').val(newUrl);
-      $('#urls').val(newUrls);
-
-      $('#consultar').click();
-
+    $.ajax({
+      method: "POST",
+      url: "ajax.urls.php",
+      datatype: 'JSON',
+      data: {url: urlPesquisada}
     })
-    .fail(function(){
-      status('Ocorreu um erro', 'danger');
-    })
+      .done(function (urls) {
 
+        $.each(urls, function (i, url) {
+          adicionaURL(url, urlPesquisada);
+        });
+
+        status('Pronto', 'success');
+        var val = $('#url').val();
+        $('#url').val('');
+        var urlsHistorico = $('#urlsHistorico').val();
+
+        if (urlsHistorico.length > 0)
+          urlsHistorico += "\r\n";
+
+        urlsHistorico += val;
+        $('#urlsHistorico').val(urlsHistorico);
+
+        contadorUrlsHistorico();
+
+        if (VerifyCheck('check_todasUrl'))
+          ProximaUrl(true);
+        else
+          ProximaUrl(false);
+      })
+      .fail(function () {
+        status('Ocorreu um erro', 'danger');
+
+        if (VerifyCheck('check_ignorarErros')) {
+
+          if (VerifyCheck('check_todasUrl'))
+            ProximaUrl(true);
+          else
+            ProximaUrl(false);
+
+        }
+
+
+      })
+
+  } else {
+    alert('digite uma URL');
+  }
 }
 
 
@@ -99,7 +120,7 @@ function adicionaURL(url, urlPesquisada){
     (url.indexOf('instagram.com') >= 0) ||
     (url.indexOf('twitter.com') >= 0)   ||
     (url.indexOf('youtube.com') >= 0)   ||
-    (url.indexOf('google.com') >= 0)   ||
+    //(url.indexOf('google.com') >= 0)   ||
     (url.indexOf('zendesk.com') >= 0)   ||
     (url.indexOf('pinterest.com') >= 0)   ||
     (url.indexOf('m.me') >= 0)   ||
@@ -162,6 +183,8 @@ function adicionaURL(url, urlPesquisada){
 
   $('#urls').val(val + url);
 
+  contadorUrlsPedentes();
+
 }
 
 function adicionaMail(email){
@@ -180,6 +203,8 @@ function adicionaMail(email){
 
   $('#emails').val(val + email);
 
+  contadorUrlsEmails();
+
 }
 
 function status(txt, type){
@@ -197,7 +222,64 @@ function status(txt, type){
 
 }
 
+function ProximaUrl(click){
+
+  var br = $('#urls').val().indexOf("\n");
+
+  if(br == -1)
+    br = $('#urls').val().length;
+
+  var newUrl = $('#urls').val().substr(0, br);
+  var newUrls = $('#urls').val().substr(br+1);
+  $('#url').val(newUrl);
+  $('#urls').val(newUrls);
+
+  console.log('URL:' + newUrl + ' // ' + br);
+
+  if(typeof click == 'undefined')
+    click = true;
+
+  if(click) {
+
+    if($('#urls').val().length > 0) {
+
+      var url = $('#url').val();
+      consultaURL(url);
+
+    } else {
+
+      setTimeout(function () {
+        status('Terminou lista', 'success');
+      }, 5000);
+
+    }
+
+  }
+
+  contadorUrlsPedentes();
+
+}
+
+function VerifyCheck(selectorID){
+    return ($('input#' + selectorID + ':checked').length > 0)
+}
+
 
 String.prototype.replaceAll = String.prototype.replaceAll || function(needle, replacement) {
-      return this.split(needle).join(replacement);
-    };
+  return this.split(needle).join(replacement);
+};
+
+
+function contadorUrlsPedentes(){
+  $('#urls_total').text(' (' + $('#urls').val().split('\n').length + ')');
+}
+
+
+function contadorUrlsHistorico(){
+  $('#urlsHistorico_total').text(' (' + $('#urlsHistorico').val().split('\n').length + ')');
+}
+
+function contadorUrlsEmails(){
+  $('#emails_total').text(' (' + $('#emails').val().split('\n').length + ')');
+}
+
