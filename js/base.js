@@ -132,8 +132,8 @@ function adicionaURL(url, urlPesquisada){
     (url.indexOf('githubusercontent.com') >= 0)   ||
     (url.indexOf('be.net') >= 0)   ||
     (url.indexOf('adobe.com') >= 0)   ||
-    (url.indexOf('facebook.com') >= 0)
-    (url.indexOf('fb.com') >= 0)
+    (url.indexOf('facebook.com') >= 0)   ||
+    (url.indexOf('fb.com') >= 0)   ||
     (url.indexOf('disqus.com') >= 0)
   ) {
     return;
