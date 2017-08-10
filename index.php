@@ -85,12 +85,15 @@
 
       <div class="col-md-6">
         <p>Urls:</p>
-        <textarea class="form-control" id="urls" style="height: 300px;white-space:pre;" wrap="soft" id="urls"></textarea>
+        <textarea class="form-control" id="urls" style="height: 200px;white-space:pre;" wrap="soft" ></textarea>
+
+        <p>Histórico já consultadas:</p>
+        <textarea class="form-control" id="urlsHistorico" style="height: 200px;white-space:pre;" wrap="soft"></textarea>
       </div>
 
       <div class="col-md-6">
         <p>E-mails:</p>
-        <textarea class="form-control" id="emails" style="height: 300px;;white-space:pre;"></textarea>
+        <textarea class="form-control" id="emails" style="height: 420px;;white-space:pre;"></textarea>
       </div>
     </div>
 

@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 function consultaURL(urlPesquisada){
 
-  console.log('Consultando URL: '. url)
+  console.log('Consultando URL: '. urlPesquisada)
 
   status('Consultando URL', 'info');
 
@@ -40,18 +40,35 @@ function consultaURL(urlPesquisada){
       });
 
       status('Pronto', 'success');
+      var val = $('#url').val();
+      $('#url').val('');
+      var urlsHistorico = $('#urlsHistorico').val();
+
+      if(urlsHistorico.length > 0)
+        urlsHistorico += "\r\n";
+
+      urlsHistorico += val;
+      $('#urlsHistorico').val(urlsHistorico);
+
+      var br = $('#urls').val().indexOf("\n");
+      var newUrl = $('#urls').val().substr(0, br);
+      var newUrls = $('#urls').val().substr(br+1);
+      $('#url').val(newUrl);
+      $('#urls').val(newUrls);
+
+      $('#consultar').click();
 
     })
     .fail(function(){
       status('Ocorreu um erro', 'danger');
     })
 
-
-
 }
 
 
 function adicionaURL(url, urlPesquisada){
+
+  url = url.trim();
 
   //retira ânroas
   if(url.substr(0,1) == '#')
@@ -73,6 +90,10 @@ function adicionaURL(url, urlPesquisada){
   if(url.substr(0,4) == 'skype:')
     return;
 
+  //retira .jpg .png .gif .jpeg
+  if( (url.substr(-4) == '.jpg') || (url.substr(-4) == '.png') || (url.substr(-4) == '.gif') || (url.substr(-5) == '.jpeg'))
+    return;
+
   //retira social
   if(
     (url.indexOf('instagram.com') >= 0) ||
@@ -83,6 +104,13 @@ function adicionaURL(url, urlPesquisada){
     (url.indexOf('pinterest.com') >= 0)   ||
     (url.indexOf('m.me') >= 0)   ||
     (url.indexOf('foursquare.com') >= 0)   ||
+    (url.indexOf('linkedin.com') >= 0)   ||
+    (url.indexOf('behance.net') >= 0)   ||
+    (url.indexOf('github.com') >= 0)   ||
+    (url.indexOf('leiame.org') >= 0)   ||
+    (url.indexOf('githubusercontent.com') >= 0)   ||
+    (url.indexOf('be.net') >= 0)   ||
+    (url.indexOf('adobe.com') >= 0)   ||
     (url.indexOf('facebook.com') >= 0)
   ) {
     return;
@@ -122,6 +150,13 @@ function adicionaURL(url, urlPesquisada){
 
   var val = $('#urls').val();
 
+  //verifica se já está na lista
+  var temp = '||' + val.replaceAll("\n", '||') + '||' + $('#urlsHistorico').val().replaceAll("\n", '||') + '||' + $('#url').val() + '||';
+
+  if(temp.indexOf('||'+url+'||') >= 0)
+    return;
+
+
   if(val.length > 0)
     val += "\r\n";
 
@@ -129,14 +164,21 @@ function adicionaURL(url, urlPesquisada){
 
 }
 
-function adicionaMail($email){
+function adicionaMail(email){
+
+  email = email.trim();
 
   var val = $('#emails').val();
+
+  //verifica se já está na lista
+  var temp = '||' + val.replaceAll("\n", '||') + '||';
+  if(temp.indexOf('||'+email+'||') >= 0)
+    return;
 
   if(val.length > 0)
     val += "\r\n";
 
-  $('#emails').val(val + $email);
+  $('#emails').val(val + email);
 
 }
 
@@ -154,3 +196,8 @@ function status(txt, type){
   $('.status').text(txt);
 
 }
+
+
+String.prototype.replaceAll = String.prototype.replaceAll || function(needle, replacement) {
+      return this.split(needle).join(replacement);
+    };
