@@ -51,15 +51,8 @@ function consultaURL(urlPesquisada){
         status('Pronto', 'success');
         var val = $('#url').val();
         $('#url').val('');
-        var urlsHistorico = $('#urlsHistorico').val();
 
-        if (urlsHistorico.length > 0)
-          urlsHistorico += "\r\n";
-
-        urlsHistorico += val;
-        $('#urlsHistorico').val(urlsHistorico);
-
-        contadorUrlsHistorico();
+        adicionaUrlHistorico(val);
 
         if (VerifyCheck('check_todasUrl'))
           ProximaUrl(true);
@@ -68,6 +61,10 @@ function consultaURL(urlPesquisada){
       })
       .fail(function () {
         status('Ocorreu um erro', 'danger');
+
+        var val = $('#url').val();
+
+        adicionaUrlErro(val);
 
         if (VerifyCheck('check_ignorarErros')) {
 
@@ -120,14 +117,17 @@ function adicionaURL(url, urlPesquisada){
     (url.indexOf('instagram.com') >= 0) ||
     (url.indexOf('twitter.com') >= 0)   ||
     (url.indexOf('youtube.com') >= 0)   ||
-    //(url.indexOf('google.com') >= 0)   ||
+    (url.indexOf('google.com') >= 0)   ||
+    (url.indexOf('plus.google.com') >= 0)   ||
     (url.indexOf('zendesk.com') >= 0)   ||
     (url.indexOf('pinterest.com') >= 0)   ||
     (url.indexOf('m.me') >= 0)   ||
     (url.indexOf('foursquare.com') >= 0)   ||
+    (url.indexOf('microsoft.com') >= 0)   ||
     (url.indexOf('linkedin.com') >= 0)   ||
     (url.indexOf('behance.net') >= 0)   ||
     (url.indexOf('github.com') >= 0)   ||
+    (url.indexOf('medifire.com') >= 0)   ||
     (url.indexOf('leiame.org') >= 0)   ||
     (url.indexOf('githubusercontent.com') >= 0)   ||
     (url.indexOf('be.net') >= 0)   ||
@@ -142,6 +142,16 @@ function adicionaURL(url, urlPesquisada){
   if(url.substr(0,6) == 'mailto') {
     adicionaMail(url.substr(7));
     return;
+  }
+
+  //se for //
+  if(url.substr(0,2) == '//') {
+
+    if(urlPesquisada.substr(0,5) == 'https')
+      url = 'https:'. url;
+    else
+      url = 'http:'. url;
+
   }
 
   //monta URL composta
@@ -172,7 +182,10 @@ function adicionaURL(url, urlPesquisada){
   var val = $('#urls').val();
 
   //verifica se já está na lista
-  var temp = '||' + val.replaceAll("\n", '||') + '||' + $('#urlsHistorico').val().replaceAll("\n", '||') + '||' + $('#url').val() + '||';
+  var temp = '||' + val.replaceAll("\n", '||') + '||'
+    + $('#urlsHistorico').val().replaceAll("\n", '||')
+    + $('#urlsErro').val().replaceAll("\n", '||')
+    + '||' + $('#url').val() + '||';
 
   if(temp.indexOf('||'+url+'||') >= 0)
     return;
@@ -191,6 +204,11 @@ function adicionaMail(email){
 
   email = email.trim();
 
+  //tira parametros..
+  if(email.indexOf('?') > 0){
+    email = email.substr(0, email.indexOf('?'));
+  }
+
   var val = $('#emails').val();
 
   //verifica se já está na lista
@@ -204,6 +222,34 @@ function adicionaMail(email){
   $('#emails').val(val + email);
 
   contadorUrlsEmails();
+
+}
+
+function adicionaUrlHistorico(url){
+
+  var urlsHistorico = $('#urlsHistorico').val();
+
+  if (urlsHistorico.length > 0)
+    urlsHistorico += "\r\n";
+
+  urlsHistorico += url;
+  $('#urlsHistorico').val(urlsHistorico);
+
+  contadorUrlsHistorico();
+
+}
+
+function adicionaUrlErro(url){
+
+  var urlsErro = $('#urlsErro').val();
+
+  if (urlsErro.length > 0)
+    urlsErro += "\r\n";
+
+  urlsErro += url;
+  $('#urlsErro').val(urlsErro);
+
+  contadorUrlsErro();
 
 }
 
@@ -281,5 +327,9 @@ function contadorUrlsHistorico(){
 
 function contadorUrlsEmails(){
   $('#emails_total').text(' (' + $('#emails').val().split('\n').length + ')');
+}
+
+function contadorUrlsErro(){
+  $('#urlsErro_total').text(' (' + $('#urlsErro').val().split('\n').length + ')');
 }
 

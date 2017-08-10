@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>Documento sem título</title>
+<title>zMail</title>
 <link rel="stylesheet" href="css/reset.css">
 
 
@@ -53,8 +53,8 @@
     <div class="row">
 
       <div class="col-md-6">
-        <p>URl</p>
-        <input class="form-control" type="text" required="" id="url" placeholder="">
+        <p>Consulta uma URL</p>
+        <input class="form-control" type="text" required="" id="url" placeholder="Digite uma URL e clique em Começar">
 
 
       </div>
@@ -87,7 +87,7 @@
 
     <div class="row">
       <div class="col-md-6">
-        <button id="consultar" class="btn btn-primary">Consultar</button>
+        <button id="consultar" class="btn btn-primary">Começar</button>
 
         <span style="margin-left: 25px;" class="status label label-success">Pronto</span>
       </div>
@@ -105,10 +105,13 @@
 
       <div class="col-md-6">
         <p>Urls Pendentes <span id="urls_total">(0)</span></p>
-        <textarea class="form-control" id="urls" style="height: 200px;white-space:pre;" wrap="soft" ></textarea>
+        <textarea class="form-control" id="urls" style="height: 100px;white-space:pre;" wrap="soft" ></textarea>
 
         <p>Histórico já consultadas <span id="urlsHistorico_total">(0)</span></p>
-        <textarea class="form-control" id="urlsHistorico" style="height: 200px;white-space:pre;" wrap="soft"></textarea>
+        <textarea class="form-control" id="urlsHistorico" style="height: 100px;white-space:pre;" wrap="soft"></textarea>
+
+        <p>Urls que retornaram erro <span id="urlsErro_total">(0)</span></p>
+        <textarea class="form-control" id="urlsErro" style="height: 100px;white-space:pre;" wrap="soft"></textarea>
       </div>
 
       <div class="col-md-6">
