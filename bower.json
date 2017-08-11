@@ -13,7 +13,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "rhinoJS": "*",
+    "rhinoJS": "#master",
     "bootstrap": "^3.3.6",
     "bootstrap-device-debug": "*",
     "font-awesome": "^4.7.0",

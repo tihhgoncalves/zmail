@@ -1,8 +1,15 @@
+var zMail = {};
+
+var d = new Date();
+
+zMail.log_file  = 'log-de-consulta_';
+zMail.log_file += d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+zMail.log_file += '_' + d.getHours() + '-' + d.getMinutes();
+zMail.log_file += '.txt';
+
 $(document).ready(function(){
 
-
   $('#consultar').click(function(){
-
 
     if (VerifyCheck('check_todasUrl')) {
       var msg;
@@ -17,12 +24,26 @@ $(document).ready(function(){
     }
 
     var url = $('#url').val();
+    zMail.url = url;
     consultaURL(url);
 
   });
 
 });
 
+function saveLog(){
+  $.ajax({
+    method: "POST",
+    url: "ajax.log.php",
+    datatype: 'JSON',
+    data: {
+      emails  : $('#emails').val(),
+      url     : zMail.url,
+      file    : zMail.log_file
+    }
+  })
+
+}
 
 function consultaURL(urlPesquisada){
 
@@ -36,6 +57,12 @@ function consultaURL(urlPesquisada){
 
     status('Consultando URL', 'info');
 
+    var timer = 0;
+    var interval_timer = setInterval(function(){
+      timer++;
+      status('Consultando URL (' + timer + ')', 'info');
+    }, 1000);
+
     $.ajax({
       method: "POST",
       url: "ajax.urls.php",
@@ -44,11 +71,14 @@ function consultaURL(urlPesquisada){
     })
       .done(function (urls) {
 
+        clearInterval(interval_timer);
+
         $.each(urls, function (i, url) {
           adicionaURL(url, urlPesquisada);
         });
 
         status('Pronto', 'success');
+
         var val = $('#url').val();
         $('#url').val('');
 
@@ -58,8 +88,13 @@ function consultaURL(urlPesquisada){
           ProximaUrl(true);
         else
           ProximaUrl(false);
+
+        //registra no log...
+        saveLog();
       })
       .fail(function () {
+
+        clearInterval(interval_timer);
         status('Ocorreu um erro', 'danger');
 
         var val = $('#url').val();
@@ -147,38 +182,13 @@ function adicionaURL(url, urlPesquisada){
     return;
   }
 
-  //se for //
-  if(url.substr(0,2) == '//') {
-
-    if(urlPesquisada.substr(0,5) == 'https')
-      url = 'https:'. url;
-    else
-      url = 'http:'. url;
-
-  }
-
   //monta URL composta
 
   if(urlPesquisada.length > 0){
 
-    if(url.substr(0, 4) !== 'http') {
+    url = navigator.realLink(urlPesquisada, url);
 
-      var new_url;
 
-      new_url = urlPesquisada;
-
-      //retira barra do final da URL Pesquisada
-      if(new_url.substr(-1) == '/')
-        new_url  = new_url.substr(0, new_url.length-1);
-
-      //retira barra do começo da URL
-      if(url.substr(0, 1) == '/')
-        url  = url.substr(1);
-
-      new_url += '/' +  url;
-
-      url = new_url;
-    }
 
   }
 
@@ -206,6 +216,11 @@ function adicionaURL(url, urlPesquisada){
 function adicionaMail(email){
 
   email = email.trim();
+  email = email.toLowerCase();
+
+  //verifica se só tem parametros (e nenhum e-mail)
+  if(email.substr(0,1) == '?')
+    return;
 
   //tira parametros..
   if(email.indexOf('?') > 0){
@@ -283,8 +298,6 @@ function ProximaUrl(click){
   $('#url').val(newUrl);
   $('#urls').val(newUrls);
 
-  console.log('URL:' + newUrl + ' // ' + br);
-
   if(typeof click == 'undefined')
     click = true;
 
@@ -313,84 +326,19 @@ function VerifyCheck(selectorID){
     return ($('input#' + selectorID + ':checked').length > 0)
 }
 
-
-String.prototype.replaceAll = String.prototype.replaceAll || function(needle, replacement) {
-  return this.split(needle).join(replacement);
-};
-
-
 function contadorUrlsPedentes(){
-  $('#urls_total').text(' (' + $('#urls').val().split('\n').length + ')');
+  $('#urls_total').text(' (' + $('#urls').val().trim().split('\n').length + ')');
 }
 
 
 function contadorUrlsHistorico(){
-  $('#urlsHistorico_total').text(' (' + $('#urlsHistorico').val().split('\n').length + ')');
+  $('#urlsHistorico_total').text(' (' + $('#urlsHistorico').val().trim().split('\n').length + ')');
 }
 
 function contadorUrlsEmails(){
-  $('#emails_total').text(' (' + $('#emails').val().split('\n').length + ')');
+  $('#emails_total').text(' (' + $('#emails').val().trim().split('\n').length + ')');
 }
 
 function contadorUrlsErro(){
-  $('#urlsErro_total').text(' (' + $('#urlsErro').val().split('\n').length + ')');
+  $('#urlsErro_total').text(' (' + $('#urlsErro').val().trim().split('\n').length + ')');
 }
-
-
-/* EXEMPLO DE USO */
-var url = 'http://www.tiago.art.br/casa/quarto/cama/'
-
-var msg_teste;
-msg_teste = 'URL: ' + url + "\n\n";
-msg_teste += 'Dentro dela tem vários links, que completos resultariam o seguinte:'
-msg_teste += "\n";
-msg_teste += "\n";
-
-var link = './teste.html';
-msg_teste += "\n";
-msg_teste += 'LINK: ' + link;
-msg_teste += "\n";
-msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
-msg_teste += "\n";
-msg_teste += '------------------------------------------------------------------';
-msg_teste += "\n";
-
-var link = 'teste.html';
-msg_teste += "\n";
-msg_teste += 'LINK: ' + link;
-msg_teste += "\n";
-msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
-msg_teste += "\n";
-msg_teste += '------------------------------------------------------------------';
-msg_teste += "\n";
-
-
-var link = '../teste.html';
-msg_teste += "\n";
-msg_teste += 'LINK: ' + link;
-msg_teste += "\n";
-msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
-msg_teste += "\n";
-msg_teste += '------------------------------------------------------------------';
-msg_teste += "\n";
-
-var link = '/teste.html';
-msg_teste += "\n";
-msg_teste += 'LINK: ' + link;
-msg_teste += "\n";
-msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
-msg_teste += "\n";
-msg_teste += '------------------------------------------------------------------';
-msg_teste += "\n";
-
-
-var link = '//www.teste.com';
-msg_teste += "\n";
-msg_teste += 'LINK: ' + link;
-msg_teste += "\n";
-msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
-msg_teste += "\n";
-msg_teste += '------------------------------------------------------------------';
-msg_teste += "\n";
-
-alert(msg_teste);
