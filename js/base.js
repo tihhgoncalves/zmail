@@ -134,6 +134,7 @@ function adicionaURL(url, urlPesquisada){
     (url.indexOf('adobe.com') >= 0)   ||
     (url.indexOf('facebook.com') >= 0)   ||
     (url.indexOf('fb.com') >= 0)   ||
+    (url.indexOf('apple.com') >= 0)   ||
     (url.indexOf('disqus.com') >= 0)
   ) {
     return;
@@ -335,3 +336,61 @@ function contadorUrlsErro(){
   $('#urlsErro_total').text(' (' + $('#urlsErro').val().split('\n').length + ')');
 }
 
+
+/* EXEMPLO DE USO */
+var url = 'http://www.tiago.art.br/casa/quarto/cama/'
+
+var msg_teste;
+msg_teste = 'URL: ' + url + "\n\n";
+msg_teste += 'Dentro dela tem vários links, que completos resultariam o seguinte:'
+msg_teste += "\n";
+msg_teste += "\n";
+
+var link = './teste.html';
+msg_teste += "\n";
+msg_teste += 'LINK: ' + link;
+msg_teste += "\n";
+msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
+msg_teste += "\n";
+msg_teste += '------------------------------------------------------------------';
+msg_teste += "\n";
+
+var link = 'teste.html';
+msg_teste += "\n";
+msg_teste += 'LINK: ' + link;
+msg_teste += "\n";
+msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
+msg_teste += "\n";
+msg_teste += '------------------------------------------------------------------';
+msg_teste += "\n";
+
+
+var link = '../teste.html';
+msg_teste += "\n";
+msg_teste += 'LINK: ' + link;
+msg_teste += "\n";
+msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
+msg_teste += "\n";
+msg_teste += '------------------------------------------------------------------';
+msg_teste += "\n";
+
+var link = '/teste.html';
+msg_teste += "\n";
+msg_teste += 'LINK: ' + link;
+msg_teste += "\n";
+msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
+msg_teste += "\n";
+msg_teste += '------------------------------------------------------------------';
+msg_teste += "\n";
+
+
+var link = '//www.teste.com';
+msg_teste += "\n";
+msg_teste += 'LINK: ' + link;
+msg_teste += "\n";
+msg_teste +='URL FINAL: ' + navigator.realLink(url, link);
+msg_teste += "\n";
+msg_teste += '------------------------------------------------------------------';
+msg_teste += "\n";
+
+alert(msg_teste);
